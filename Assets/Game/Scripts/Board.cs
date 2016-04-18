@@ -1,31 +1,48 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Board : MonoBehaviour
 {
-	[SerializeField] int width;
-	[SerializeField] int height;
+	[SerializeField] int _width;
+	[SerializeField] int _height;
 
 	Tile[,] _tiles;
 
-	void Start ()
+	IEnumerator Start ()
 	{
-		_tiles = new Tile[width, height];
+		_tiles = new Tile[_width, _height];
 
-		Transform tunnelPrefab = transform.GetChild(0);
-		Transform tilePrefab = tunnelPrefab.GetChild(0);
+		// First tile of first column is prefab
+		Transform columnPrefab = transform.GetChild(0);
+		Transform tilePrefab = columnPrefab.GetChild(0);
+		_tiles[0, 0] = tilePrefab.GetComponent<Tile>();
 
-		_tiles[0
-		for (int i = 1; i < height; ++i)
+		// Remove all but first tile
+		for (int x = 1; x < transform.childCount; ++x)
+			Destroy(transform.GetChild(x).gameObject);
+		for (int y = 1; y < columnPrefab.childCount; ++y)
+			Destroy(columnPrefab.GetChild(y).gameObject);
+
+		yield return null;
+
+		// Create tiles in first column
+		for (int y = 1; y < _height; ++y)
 		{
-			GameObject tile = Instantiate<GameObject>(tilePrefab.gameObject);
-			tile.transform.SetParent(tunnelPrefab);
+			_tiles[0, y] = Instantiate<GameObject>(tilePrefab.gameObject).GetComponent<Tile>();
+			_tiles[0, y].transform.SetParent(columnPrefab, false);
+			_tiles[0, y].name = string.Format("Tiles ({0})", y + 1);
 		}
 
-		for (int i = 1; i < width; ++i)
+		// Create columns and get tiles
+		for (int x = 1; x < _width; ++x)
 		{
-			GameObject tunnel = Instantiate<GameObject>(tunnelPrefab.gameObject);
-			tunnel.transform.SetParent(transform);
+			GameObject column = Instantiate<GameObject>(columnPrefab.gameObject);
+			column.transform.SetParent(transform, false);
+			column.name = string.Format("Column ({0})", x + 1);
+
+			for (int y = 0; y < _height; ++y)
+				_tiles[x, y] = column.transform.GetChild(y).GetComponent<Tile>();
 		}
 	}
 }
