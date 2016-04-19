@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a5cabbf92a34b098ff86e972cd62ff, type: 3}
+  m_Name: YellowSpell
+  m_EditorClassIdentifier: 
+  cardData:
+    image: {fileID: 21300006, guid: 18600a70806284d7d9f5a536e562aa29, type: 3}
+    cost: 3
+  color: {r: 1, g: 0.97423935, b: 0.066176474, a: 1}

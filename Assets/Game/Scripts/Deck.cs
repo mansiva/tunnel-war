@@ -10,12 +10,15 @@ public class Deck : MonoBehaviour
 	List<Unit> _deckUnits;
 	List<Unit> _handUnits;
 
-	IEnumerator Start ()
+	public Card SelectedCard { get; private set; }
+
+	public IEnumerator Setup ()
 	{
 		_cards = new Card[_size];
 
 		// First card is prefab
-		_cards[0] = transform.GetChild(0).GetComponent<Card>();
+		GameObject slotPrefab = transform.GetChild(0).gameObject;
+		_cards[0] = slotPrefab.GetComponentInChildren<Card>();
 
 		// Remove all but first tile
 		for (int i = 1; i < transform.childCount; ++i)
@@ -26,13 +29,13 @@ public class Deck : MonoBehaviour
 		// Create tiles in first column
 		for (int i = 1; i < _size; ++i)
 		{
-			_cards[i] = Instantiate<GameObject>(_cards[0].gameObject).GetComponent<Card>();
-			_cards[i].transform.SetParent(transform, false);
-			_cards[i].name = string.Format("Card ({0})", i + 1);
+			_cards[i] = Instantiate<GameObject>(slotPrefab).GetComponentInChildren<Card>();
+			_cards[i].transform.parent.SetParent(transform, false);
+			_cards[i].transform.name = string.Format("Slot ({0})", i + 1);
 		}
  	}
 
-	public void LoadDeck(Unit[] units)
+	public void LoadUnits(Unit[] units)
 	{
 		units.Shuffle<Unit>();
 
@@ -48,6 +51,17 @@ public class Deck : MonoBehaviour
 		{
 			_deckUnits.Add(units[i]);
 		}
+	}
+
+	public void SelectCard(Card card)
+	{
+		if (SelectedCard != null)
+		{
+			SelectedCard.transform.position -= new Vector3(0, 20);
+		}
+
+		SelectedCard = card;
+		SelectedCard.transform.position += new Vector3(0, 20);
 	}
 
 	public void PlayCard(Card card, Tile tile)

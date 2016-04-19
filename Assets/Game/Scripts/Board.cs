@@ -9,7 +9,7 @@ public class Board : MonoBehaviour
 
 	Tile[,] _tiles;
 
-	IEnumerator Start ()
+	public IEnumerator Setup ()
 	{
 		_tiles = new Tile[_width, _height];
 
